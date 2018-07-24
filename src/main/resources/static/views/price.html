@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Price</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+<body>
+<div class="jumbotron">
+		<h1>Price</h1>
+	</div>
+	
+
+	<div class="container" ng-app="prizy"
+		ng-controller="PriceController">
+		
+		<table class="table table-dark table-striped">
+
+			<thead>
+				<tr class="info">
+					<th>Price for </th>
+					<th >{{myData.barCode}}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr >
+					<td>Bar Code </td>
+					<td>{{myData.barCode}}</td>
+				</tr>
+				<tr >
+					<td>Product Description </td>
+					<td>{{myData.productDescription}}</td>
+				</tr>
+				<tr >
+					<td>Average Price</td>
+					<td>{{myData.averagePrice}}</td>
+				</tr>
+				<tr >
+					<td>Minimum Price</td>
+					<td>{{myData.minPrice}}</td>
+				</tr>
+				<tr >
+					<td>Maximum  Price</td>
+					<td>{{myData.maxPrice}}</td>
+				</tr>
+				<tr >
+					<td>Ideal  Price</td>
+					<td>{{myData.idealPrice}}</td>
+				</tr>
+			</tbody>
+		</table>
+
+	<script>
+var app = angular.module('prizy',[]);
+		
+		//['ngRoute']).config(function($locationProvider) {
+    //$locationProvider.html5Mode(true);
+//});
+
+app.controller('PriceController', function($scope,$http,$location) {
+
+	var searchObject = $location.search();
+	console.log(searchObject.product+";");
+	var product=searchObject.product;
+	console.log(product);
+	if(product==undefined) product=123456781;
+    $http.get("/price/"+product).then(function(response) {
+        $scope.myData = response.data;
+       // $window.alert($scope.myData);
+    });
+});
+</script>
+
+</body>
+</html>

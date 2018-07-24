@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Products</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+
+<body>
+	<hr />
+
+	<div class="jumbotron">
+		<h1>Products</h1>
+	</div>
+
+	<div class="container" ng-app="prizy"
+		ng-controller="ProductsController">
+
+
+		<table class="table table-dark table-striped">
+
+			<thead>
+				<tr>
+					<th>Bar Code</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="product in myData.products"  href="#!{{product.barCode}}">
+					<td>{{product.barCode}}</td>
+					<td>{{product.productDescription}}</td>
+					<div ng-view></div>
+				</tr>
+				
+			</tbody>
+		</table>
+
+		<div class="container">
+			<ul class="pagination" >
+				<li class="page-item"	ng-repeat="i in range.slice(0,myData.totalPages) track by $index">
+				<a class="page-link" href="?page={{$index+1}}">{{$index+1}}</a>
+				</li>
+			</ul>
+		</div>
+
+
+	</div>
+
+	<script>
+var app = angular.module('prizy',["ngRoute"]);
+
+app.config(function($routeProvider,$scope) {
+	var barcode =$scope.product.barCode
+    $routeProvider
+    .when(barcode, {
+        templateUrl : "price.html?product="+barcode
+    })
+    .otherwise({
+        template : "price.html?product="+barcode
+    });
+});
+
+app.controller('ProductsController', function($scope,$http,$location) {
+
+	
+	var searchObject = $location.search();
+	console.log(searchObject.page+";");
+	var page=searchObject.page;
+	if(page==undefined) page=1;
+    $http.get("/products/"+page).then(function(response) {
+        $scope.myData = response.data;
+    });
+    $scope.range = new Array(10);
+});
+</script>
+</body>
+</html>
